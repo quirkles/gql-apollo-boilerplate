@@ -1,5 +1,9 @@
+import { getLogger } from './logger'
+
+const logger = getLogger()
+
 const greet = 'hello'
 
 const newGreet = greet.toUpperCase()
 
-console.log(newGreet) //eslint-disable-line
+logger.info({ foo: true }) //eslint-disable-line
