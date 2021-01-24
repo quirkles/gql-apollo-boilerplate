@@ -1,0 +1,14 @@
+overwrite: true
+documents: null
+generates:
+  src/types.ts:
+    schema: 'src/**/*.gql'
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'
+  schema.json:
+    schema: 'src/**/*.gql'
+    plugins:
+      - introspection
+    config:
+      minify: true
