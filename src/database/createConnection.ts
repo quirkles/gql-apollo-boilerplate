@@ -14,7 +14,7 @@ const dbConfig = {
 };
 
 export const initDb = async (logger: Logger): Promise<void> => {
-    logger.info(dbConfig, 'Connecting to db');
-    const connection = await createConnection(dbConfig);
-    logger.info(connection, 'Connected to db');
+    logger.info('Connecting to db');
+    await createConnection(dbConfig);
+    logger.info('Connected to db');
 };

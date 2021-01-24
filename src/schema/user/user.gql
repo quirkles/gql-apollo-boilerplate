@@ -1,0 +1,5 @@
+type User {
+    username: String!
+}
+
+union CreateUserResponse = User | GenericError
