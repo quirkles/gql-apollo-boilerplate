@@ -7,31 +7,26 @@ const dotenv = require('dotenv');
 const env = process.env.ENV || 'dev';
 
 function getDotenvConfig() {
-  const envPath = path.join(__dirname, '..', `.${env}.env`);
-  let dotEnvBuffer = null;
-  try {
-    dotEnvBuffer = fs.readFileSync(envPath);
-  } catch (err) {
-    if (err.code === 'ENOENT') return {};
-    throw err;
-  }
-  return dotenv.parse(dotEnvBuffer);
+    const envPath = path.join(__dirname, '..', `.${env}.env`);
+    let dotEnvBuffer = null;
+    try {
+        dotEnvBuffer = fs.readFileSync(envPath);
+    } catch (err) {
+        if (err.code === 'ENOENT') return {};
+        throw err;
+    }
+    return dotenv.parse(dotEnvBuffer);
 }
 
 function getEnvVarConfig() {
-  const envVars = [
-    'JWT_SECRET',
-    'ENCRYPTION_KEY',
-    'ENCRYPTION_IV',
-    'LOG_TO_FILE',
-  ];
-  return envVars.reduce((envVarConfig, varName) => {
-    const value = process.env[varName];
-    if (value) {
-      envVarConfig[varName] = value;
-    }
-    return envVarConfig;
-  }, {});
+    const envVars = ['JWT_SECRET', 'ENCRYPTION_KEY', 'ENCRYPTION_IV', 'LOG_TO_FILE'];
+    return envVars.reduce((envVarConfig, varName) => {
+        const value = process.env[varName];
+        if (value) {
+            envVarConfig[varName] = value;
+        }
+        return envVarConfig;
+    }, {});
 }
 
 const baseConfig = require('./base') || {};
