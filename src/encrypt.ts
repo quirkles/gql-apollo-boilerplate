@@ -1,4 +1,4 @@
-import {createCipheriv, createDecipheriv, randomBytes} from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 
 import config from '../config';
 
@@ -27,5 +27,5 @@ export const decrypt = (stringToDecrypt: string): string => {
 };
 
 export const generateIv = (): string => {
-   return randomBytes(8).toString('hex')
-}
+    return randomBytes(8).toString('hex');
+};

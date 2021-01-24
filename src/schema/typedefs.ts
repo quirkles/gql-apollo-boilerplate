@@ -1,5 +1,5 @@
-import { loadFilesSync } from 'graphql-tools'
+import { loadFilesSync } from 'graphql-tools';
 
-const typedefs = loadFilesSync(`${__dirname}/**/*.gql`)
+const typedefs = loadFilesSync(`${__dirname}/**/*.gql`);
 
-export default typedefs
+export default typedefs;

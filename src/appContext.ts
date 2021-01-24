@@ -1,12 +1,14 @@
-import {Logger} from "pino";
+import { Logger } from 'pino';
 import { Request, Response } from 'express';
+
+export interface AppUser {
+    email: string;
+    id: string;
+}
 
 export interface AppRequest extends Request {
     logger?: Logger;
-    user?: {
-        email: string;
-        id: string;
-    }
+    user?: AppUser;
 }
 
 interface ExpressIntegrationContext {
