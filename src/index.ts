@@ -2,32 +2,26 @@ import { ApolloServer, gql } from 'apollo-server-express';
 import express, { Express } from 'express';
 
 import { resolvers, typeDefs } from './schema';
-import { getLogger } from "./logger";
-
-const logger = getLogger()
-
-const server = new ApolloServer({
-typeDefs: gql`
-    ${typeDefs}
-`,
-  resolvers,
-  introspection: true,
-  context: ({ req, res }: any) => ({
-      req,
-      res,
-  }),
-  formatError: (error: any) => {
-      logger.error(
-          error.message,
-          logger.context({
-              ...error,
-          })
-      );
-      return error;
-  },
-});
+import {getLogger, getLoggerMiddleware} from "./middleware/logger";
+import {createAppContext} from "./appContext";
+import {getUserMiddleware} from "./middleware/user";
 
 const app: Express = express()
+
+const appLogger = getLogger()
+
+app.use(getUserMiddleware())
+app.use(getLoggerMiddleware(appLogger))
+
+const server = new ApolloServer({
+    typeDefs: gql`
+        ${typeDefs}
+    `,
+  resolvers,
+  introspection: true,
+  context: createAppContext(),
+});
+
 
 server.applyMiddleware({ app });
 

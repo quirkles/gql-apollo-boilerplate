@@ -1,7 +1,9 @@
-import {Greeting} from "../../../types";
+import { Greeting } from "../../../types";
+import {AppContext} from "../../../appContext";
 
 const greetingQueryResolver = {
-    Greeting(): Greeting {
+    Greeting(_: undefined, __: undefined, context: AppContext): Greeting {
+        context?.logger?.info('helloooooo')
         return { message: 'hello' }
     }
 }
