@@ -3,5 +3,6 @@ import { alternateResponseFor } from '../../shared/resolver';
 
 export default {
     Mutation,
-    CreateUserResponse: alternateResponseFor('User'),
+    CreateUserResponse: alternateResponseFor('UserAndToken'),
+    LoginUserResponse: alternateResponseFor('UserAndToken'),
 };

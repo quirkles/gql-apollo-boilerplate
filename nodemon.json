@@ -10,10 +10,13 @@
     "src/"
   ],
   "execMap": {
-    "ts": "node -r ts-node/register"
+    "ts": "npx ts-node"
   },
   "env": {
     "NODE_ENV": "development"
+  },
+  "events": {
+    "restart": "node --version && npm run lint && npm run generate-types"
   },
   "ext": "js,json,ts"
 }

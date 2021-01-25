@@ -4,9 +4,6 @@ import config from '../config';
 
 const { ENCRYPTION_IV, ENCRYPTION_KEY } = config;
 
-console.log(ENCRYPTION_IV) //eslint-disable-line
-console.log(ENCRYPTION_KEY) //eslint-disable-line
-
 const algorithm = 'aes-256-cbc';
 let key = Buffer.alloc(32);
 

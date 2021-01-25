@@ -1,5 +1,12 @@
 type User {
+    id: String!
     username: String!
 }
 
-union CreateUserResponse = User | GenericError
+type UserAndToken {
+    user: User!
+    token: String!
+}
+
+union CreateUserResponse = UserAndToken | GenericError
+union LoginUserResponse = UserAndToken | GenericError
