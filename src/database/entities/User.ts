@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, Column, Entity, BaseEntity, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, BeforeInsert, BeforeUpdate, BaseEntity } from 'typeorm';
 import { encrypt } from '../../encrypt';
 
 @Entity()

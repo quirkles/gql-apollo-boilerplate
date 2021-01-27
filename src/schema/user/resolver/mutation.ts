@@ -1,6 +1,6 @@
 import { AppContext } from '../../../appContext';
 import { CreateUserResponse, LoginUserResponse, MutationCreateUserArgs, MutationLoginUserArgs } from '../../../types';
-import { User } from '../../../database/entities/User';
+import { User } from '../../../database/entities';
 import { getRepository } from 'typeorm';
 import { GenericErrorResponse } from '../../shared/responses';
 import { sign } from 'jsonwebtoken';
