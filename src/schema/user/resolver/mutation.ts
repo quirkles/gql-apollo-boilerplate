@@ -14,7 +14,7 @@ const userMutationResolver = {
             const userRepository = getRepository(User);
             const existingUser = await userRepository.findOne({ username });
             if (existingUser) {
-                return new GenericErrorResponse('The username is taken');
+                return new GenericErrorResponse('Failed to create user', 'The username is taken');
             }
             const user = userRepository.create(args);
             await user.save();
