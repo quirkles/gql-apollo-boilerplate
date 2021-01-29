@@ -1,6 +1,6 @@
-import { join } from 'path';
+import { User } from './entities';
 
 export default {
     name: 'default',
-    entities: [`${join(__dirname)}/entities/**/*.ts`],
+    entities: [User],
 };

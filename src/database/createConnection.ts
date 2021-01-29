@@ -5,6 +5,8 @@ import baseDbConfig from './connectionOptions.base';
 
 const env = process.env.ENV || 'dev';
 
+console.log('env is', env) //eslint-disable-line
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const envDbConfig = require(`./connectionOptions.${env}`).default;
 

@@ -3,5 +3,8 @@ node_modules
 dist
 
 src/types.ts
+src/schema/Schema.graphql
+
 **/*.log
+**/*.*.log
 **/*.sqlite

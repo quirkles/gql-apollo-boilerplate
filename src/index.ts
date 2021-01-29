@@ -35,7 +35,7 @@ initDb(appLogger)
             res.end();
         });
 
-        app.listen({ port }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
+        app.listen({ port }, () => console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`));
     })
     .catch((err) => {
         appLogger.error(err.message);

@@ -1,10 +1,10 @@
 import { loadSchema, GraphQLFileLoader } from 'graphql-tools';
 
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, printSchema } from 'graphql';
 
-const getSchema = (): Promise<GraphQLSchema> =>
+export const compileSchema = (): Promise<GraphQLSchema> =>
     loadSchema(`${__dirname}/**/*.gql`, {
         loaders: [new GraphQLFileLoader()],
     });
 
-export default getSchema;
+export const getSchemaString = (): Promise<string> => compileSchema().then(printSchema);
