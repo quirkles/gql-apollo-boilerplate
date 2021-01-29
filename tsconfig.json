@@ -17,6 +17,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
+  "files": ["src/gql.d.ts"],
   "exclude": [ "node_modules" ],
   "include": [ "src/**/*.ts" ],
 }

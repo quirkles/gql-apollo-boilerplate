@@ -1,27 +1,28 @@
 import 'reflect-metadata';
 
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import express, { Express } from 'express';
 
-import { resolvers, typeDefs } from './schema';
+import { getSchemaAndResolvers } from './schema';
 import { getLogger, getLoggerMiddleware } from './middleware/logger';
 import { createAppContext } from './appContext';
 import { getUserMiddleware } from './middleware/user';
 import { initDb } from './database/createConnection';
+import config from '../config';
 
 const app: Express = express();
 const appLogger = getLogger();
 
+const port = config.PORT || '4000';
+
 initDb(appLogger)
-    .then(() => {
+    .then(async () => {
+        const schema = await getSchemaAndResolvers();
         app.use(getUserMiddleware());
         app.use(getLoggerMiddleware(appLogger));
 
         const server = new ApolloServer({
-            typeDefs: gql`
-                ${typeDefs}
-            `,
-            resolvers,
+            schema,
             introspection: true,
             context: createAppContext(),
         });
@@ -34,7 +35,7 @@ initDb(appLogger)
             res.end();
         });
 
-        app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
+        app.listen({ port }, () => console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`));
     })
     .catch((err) => {
         appLogger.error(err.message);

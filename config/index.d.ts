@@ -4,6 +4,8 @@ export interface AppConfig {
     ENCRYPTION_IV: string;
 
     LOG_TO_FILE: boolean;
+
+    PORT: string;
 }
 declare const config: AppConfig;
 export default config;

@@ -19,7 +19,7 @@ function getDotenvConfig() {
 }
 
 function getEnvVarConfig() {
-    const envVars = ['JWT_SECRET', 'ENCRYPTION_KEY', 'ENCRYPTION_IV', 'LOG_TO_FILE'];
+    const envVars = ['JWT_SECRET', 'ENCRYPTION_KEY', 'ENCRYPTION_IV', 'LOG_TO_FILE', 'PORT'];
     return envVars.reduce((envVarConfig, varName) => {
         const value = process.env[varName];
         if (value) {

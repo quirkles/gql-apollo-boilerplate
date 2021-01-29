@@ -7,7 +7,8 @@
     "build": "tsc",
     "run": "npm run build && node dist/index.js",
     "dev": "npm run lint && npm run generate-types && ENV=dev nodemon --config nodemon.json src/index.ts",
-    "test": "jest",
+    "test:unit": "jest --config=jest.unit.config.ts",
+    "test:integration": "jest --config=jest.integration.config.ts",
     "logs:pp": "tail -f logs/server.log | pino-pretty",
     "generate-types": "graphql-codegen --config codegen.yml",
     "lint": "eslint 'src/**/*.{js,ts,tsx}'"
