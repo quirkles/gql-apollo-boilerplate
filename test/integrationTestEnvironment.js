@@ -1,17 +1,15 @@
-import type { Config } from '@jest/types';
-import NodeEnvironment from 'jest-environment-node';
-import { v4 as uuid } from 'uuid';
-import { rm } from 'fs';
-import { startApp } from '../src/app';
-import { Server } from 'http';
-import { Script } from 'vm';
-import { join } from 'path';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const NodeEnvironment = require('jest-environment-node');
+const { v4: uuid } = require('uuid');
+const { rm } = require('fs');
+const { startApp } = require('../dist/app');
+const { join } = require('path');
 
 class CustomEnvironment extends NodeEnvironment {
-    private readonly testRunId: string;
-    private readonly dbName: string;
-    testServer: Server | null = null;
-    constructor(config: Config.ProjectConfig) {
+    testRunId;
+    dbName;
+    testServer;
+    constructor(config) {
         super(config);
         const testRunId = uuid();
         this.testRunId = testRunId;
@@ -30,13 +28,14 @@ class CustomEnvironment extends NodeEnvironment {
         } catch (err) {
             console.log('Failed to remove test db: ', err.message);
         }
+        this.testServer.close();
     }
 
-    runScript<T = unknown>(script: Script): T | null {
+    runScript(script) {
         return super.runScript(script);
     }
 
-    removeDb(): Promise<void> {
+    removeDb() {
         const dbPath = join(__dirname, '../data', this.dbName);
 
         return new Promise((res, rej) => {
