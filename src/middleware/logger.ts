@@ -10,7 +10,7 @@ import { AppRequest } from '../appContext';
 let logOutput: string | number = 1;
 
 const env = process.env.ENV || 'dev';
-const logFileName = `server${env === 'dev.' ? `${Date.now()}.` : ''}log`;
+const logFileName = `server.${env === 'dev' ? `${Date.now()}.` : ''}log`;
 if (config.LOG_TO_FILE) {
     logOutput = join(__dirname, '..', '..', 'logs', logFileName);
 }

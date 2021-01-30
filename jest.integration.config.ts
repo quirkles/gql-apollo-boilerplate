@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/en/configuration.html
@@ -26,7 +28,7 @@ export default {
     coverageDirectory: 'coverage',
 
     // An array of regexp pattern strings used to skip coverage collection
-    coveragePathIgnorePatterns: ['/node_modules/'],
+    coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
 
     // Indicates which provider should be used to instrument code for coverage
     coverageProvider: 'v8',
@@ -52,7 +54,7 @@ export default {
     // forceCoverageMatch: [],
 
     // A path to a module which exports an async function that is triggered once before all test suites
-    // globalSetup: undefined,
+    // globalSetup: '../test/integrationTestSetup.ts',
 
     // A path to a module which exports an async function that is triggered once after all test suites
     // globalTeardown: undefined,
@@ -112,12 +114,10 @@ export default {
     // restoreMocks: false,
 
     // The root directory that Jest should scan for tests and modules within
-    // rootDir: undefined,
+    rootDir: join(__dirname, 'src'),
 
     // A list of paths to directories that Jest should use to search for files in
-    // roots: [
-    //   "<rootDir>"
-    // ],
+    roots: ['<rootDir>'],
 
     // Allows you to use a custom runner instead of Jest's default test runner
     // runner: "jest-runner",
@@ -135,7 +135,7 @@ export default {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    testEnvironment: 'node',
+    testEnvironment: '../test/integrationTestEnvironment.ts',
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},
