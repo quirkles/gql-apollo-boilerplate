@@ -1,6 +1,8 @@
 .idea
 node_modules
+
 dist
+coverage
 
 src/types.ts
 src/schema/Schema.graphql
