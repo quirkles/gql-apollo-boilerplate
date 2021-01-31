@@ -9,11 +9,17 @@ import { getLogger, getLoggerMiddleware } from './middleware/logger';
 import { createAppContext } from './appContext';
 import { getUserMiddleware } from './middleware/user';
 import { initDb } from './database/createConnection';
+import { Connection } from 'typeorm';
 
 const app: Express = express();
 const appLogger = getLogger();
 
-export const startApp = (envOverrides: Record<string, string | undefined> = {}): Promise<Server> => {
+export const startApp = (
+    envOverrides: Record<string, string | undefined> = {},
+): Promise<{
+    server: Server;
+    connection: Connection;
+}> => {
     process.env = {
         ...process.env,
         ...envOverrides,
@@ -21,7 +27,7 @@ export const startApp = (envOverrides: Record<string, string | undefined> = {}):
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const config = require('../config');
     return initDb(appLogger)
-        .then(async () => {
+        .then(async (connection: Connection) => {
             const port = config.PORT || '4000';
             const schema = await getSchemaAndResolvers();
             app.use(getUserMiddleware());
@@ -35,9 +41,13 @@ export const startApp = (envOverrides: Record<string, string | undefined> = {}):
 
             server.applyMiddleware({ app });
 
-            return app.listen({ port }, () =>
+            const httpServer = app.listen({ port }, () =>
                 console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`),
             );
+            return {
+                server: httpServer,
+                connection,
+            };
         })
         .catch((err) => {
             appLogger.error(err.message);

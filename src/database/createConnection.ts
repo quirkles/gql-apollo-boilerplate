@@ -1,9 +1,9 @@
-import { createConnection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 import { Logger } from 'pino';
 
 import baseDbConfig from './connectionOptions.base';
 
-export const initDb = async (logger: Logger): Promise<void> => {
+export const initDb = async (logger: Logger): Promise<Connection> => {
     const env = process.env.ENV || 'dev';
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const envDbConfig = require(`./connectionOptions.${env}`).default;
@@ -12,6 +12,7 @@ export const initDb = async (logger: Logger): Promise<void> => {
         ...envDbConfig,
     };
     logger.info('Connecting to db');
-    await createConnection(dbConfig);
+    const connection = await createConnection(dbConfig);
     logger.info('Connected to db');
+    return connection;
 };

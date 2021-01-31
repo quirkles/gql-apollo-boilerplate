@@ -18,7 +18,14 @@ class CustomEnvironment extends NodeEnvironment {
 
     async setup() {
         await super.setup();
-        this.testServer = await startApp({ ENV: 'test', DB_NAME_OVERRIDE: this.dbName });
+        try {
+            const { server, connection } = await startApp({ ENV: 'test', DB_NAME_OVERRIDE: this.dbName });
+            this.testServer = server;
+            this.global.dbConnection = connection;
+            console.log('Integration test setup complete') //eslint-disable-line
+        } catch (e) {
+            console.log(e) //eslint-disable-line
+        }
     }
 
     async teardown() {
