@@ -35,7 +35,18 @@ class CustomEnvironment extends NodeEnvironment {
         } catch (err) {
             console.log('Failed to remove test db: ', err.message);
         }
-        this.testServer.close();
+        await this.closeServer();
+    }
+
+    async closeServer() {
+        return new Promise((res, rej) => {
+            this.testServer.close((err) => {
+                if (err) {
+                    return rej(err);
+                }
+                return res();
+            });
+        });
     }
 
     runScript(script) {
