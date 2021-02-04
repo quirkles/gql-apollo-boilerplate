@@ -7,7 +7,7 @@ generates:
       - 'typescript'
       - 'typescript-resolvers'
   schema.json:
-    schema: 'src/**/*.gql'
+    schema: 'src/schema/Schema.graphql'
     plugins:
       - introspection
     config:

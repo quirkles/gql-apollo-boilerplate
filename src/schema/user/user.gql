@@ -8,5 +8,7 @@ type UserAndToken {
     token: String!
 }
 
+union UserQueryResponse = User | GenericError
+
 union CreateUserResponse = UserAndToken | GenericError
 union LoginUserResponse = UserAndToken | GenericError

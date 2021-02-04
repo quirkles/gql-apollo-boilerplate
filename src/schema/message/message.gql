@@ -6,6 +6,7 @@ type Message {
 }
 
 union CreateMessageResponse = Message | UnauthorizedRequest | GenericError
+union MessageQueryResponse = Message | GenericError
 
 input CreateMessageInput {
     recipientId: String!

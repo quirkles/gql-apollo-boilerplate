@@ -19,5 +19,5 @@
   "events": {
     "restart": "node --version && npm run lint && npm run generate-types"
   },
-  "ext": "js,json,ts"
+  "ext": "js,json,ts,gql"
 }
