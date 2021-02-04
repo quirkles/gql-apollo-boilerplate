@@ -1,6 +1,6 @@
-import { User } from './entities';
+import { User, Message } from './entities';
 
 export default {
     name: 'default',
-    entities: [User],
+    entities: [User, Message],
 };

@@ -2,3 +2,9 @@ type GenericError {
     message: String!
     reason: String
 }
+
+
+type UnauthorizedRequest {
+    message: String!
+    reason: String
+}

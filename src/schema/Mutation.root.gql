@@ -1,4 +1,5 @@
 type Mutation {
     createUser(username: String!, password: String!): CreateUserResponse!
     loginUser(username: String!, password: String!): LoginUserResponse!
+    createMessage(input: CreateMessageInput): CreateMessageResponse!
 }

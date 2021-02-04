@@ -1,0 +1,13 @@
+type Message {
+    id: String!
+    text: String!
+    recipient: User!
+    sender: User!
+}
+
+union CreateMessageResponse = Message | UnauthorizedRequest | GenericError
+
+input CreateMessageInput {
+    recipientId: String!
+    messageText: String!
+}

@@ -1,4 +1,4 @@
-import { GenericError } from '../../types';
+import { GenericError, UnauthorizedRequest } from '../../types';
 
 export interface ResponseType {
     readonly responseType: string;
@@ -17,4 +17,10 @@ export class GenericErrorResponse implements ResponseType, GenericError {
             this.reason = reason;
         }
     }
+}
+
+export class UnauthorizedRequestResponse implements ResponseType, UnauthorizedRequest {
+    readonly responseType = 'UnauthorizedRequest';
+
+    readonly message = 'You must be logged in to perform this query or mutation';
 }
