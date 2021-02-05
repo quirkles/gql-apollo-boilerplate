@@ -2,7 +2,7 @@
 const NodeEnvironment = require('jest-environment-node');
 const { v4: uuid } = require('uuid');
 const { rm } = require('fs');
-const { startApp } = require('../dist/app');
+const { startApp } = require('../src/app');
 const { join } = require('path');
 
 class CustomEnvironment extends NodeEnvironment {
