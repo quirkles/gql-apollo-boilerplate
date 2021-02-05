@@ -127,6 +127,7 @@ describe('user mutations integration', () => {
             const { message, reason } = data.data.loginUser;
             expect(message).toBe('Could not log you in');
             expect(reason).toBe('No matching user found');
+            await userRepository.delete({ username: 'quirkles' });
         });
         it('returns error if username is incorrect', async () => {
             const userRepository: Repository<User> = connection.getRepository('User');
