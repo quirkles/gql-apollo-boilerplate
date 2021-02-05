@@ -1,7 +1,5 @@
 import { AppContext } from '../../../appContext';
 import { CreateUserResponse, LoginUserResponse, MutationCreateUserArgs, MutationLoginUserArgs } from '../../../types';
-import { User } from '../../../database/entities';
-import { getRepository } from 'typeorm';
 import { GenericErrorResponse } from '../../shared/responses';
 import { sign } from 'jsonwebtoken';
 import config from '../../../../config';
@@ -11,13 +9,12 @@ const userMutationResolver = {
     async createUser(_: undefined, args: MutationCreateUserArgs, context: AppContext): Promise<CreateUserResponse> {
         try {
             const { username } = args;
-            const userRepository = getRepository(User);
-            const existingUser = await userRepository.findOne({ username });
-            if (existingUser) {
+            const userDataSource = context.dataSource.getDataSourceForEntity('user');
+            const existingUsers = await userDataSource.findByParams({ username });
+            if (existingUsers && existingUsers.length) {
                 return new GenericErrorResponse('Failed to create user', 'The username is taken');
             }
-            const user = userRepository.create(args);
-            await user.save();
+            const user = await userDataSource.create(args);
             const { id } = user;
             const token = sign({ username, sub: id }, config.JWT_SECRET);
             return { user, token };
@@ -29,9 +26,10 @@ const userMutationResolver = {
     async loginUser(_: undefined, args: MutationLoginUserArgs, context: AppContext): Promise<LoginUserResponse> {
         try {
             const { username, password } = args;
-            const userRepository = getRepository(User);
-            const user = await userRepository.findOne({ username, password: encrypt(password) });
-            if (user) {
+            const userDataSource = context.dataSource.getDataSourceForEntity('user');
+            const existingUsers = await userDataSource.findByParams({ username, password: encrypt(password) });
+            if (existingUsers && existingUsers.length) {
+                const user = existingUsers[0];
                 const { username, id } = user;
                 const token = sign({ username, sub: id }, config.JWT_SECRET);
                 return { user, token };

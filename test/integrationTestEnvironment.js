@@ -2,7 +2,7 @@
 const NodeEnvironment = require('jest-environment-node');
 const { v4: uuid } = require('uuid');
 const { rm } = require('fs');
-const { startApp } = require('../dist/app');
+const { startApp } = require('../src/app');
 const { join } = require('path');
 
 class CustomEnvironment extends NodeEnvironment {
@@ -19,9 +19,9 @@ class CustomEnvironment extends NodeEnvironment {
     async setup() {
         await super.setup();
         try {
-            const { server, connection } = await startApp({ ENV: 'test', DB_NAME_OVERRIDE: this.dbName });
+            const { server, connectionMap } = await startApp({ ENV: 'test', DB_NAME_OVERRIDE: this.dbName });
             this.testServer = server;
-            this.global.dbConnection = connection;
+            this.global.dbConnection = connectionMap.gqlSql;
             console.log('Integration test setup complete') //eslint-disable-line
         } catch (e) {
             console.log(e) //eslint-disable-line

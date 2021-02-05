@@ -1,7 +1,7 @@
 import { Message, MessageResolvers, User } from '../../../types';
 import { AppContext } from '../../../appContext';
 
-const FieldResolver: MessageResolvers<AppContext> = {
+export const FieldResolver: MessageResolvers<AppContext> = {
     async text(parent: Message, args: unknown, context: AppContext) {
         if (parent.text) {
             return parent.text;
@@ -9,7 +9,7 @@ const FieldResolver: MessageResolvers<AppContext> = {
             const messageDataSource = context.dataSource.getDataSourceForEntity('message');
             const message = await messageDataSource.findById(parent.id);
             if (message) {
-                return message.text;
+                return message.text || '';
             }
         }
         context.logger?.error('Failed to find the message text');
@@ -22,7 +22,7 @@ const FieldResolver: MessageResolvers<AppContext> = {
             const messageDataSource = context.dataSource.getDataSourceForEntity('message');
             const userDataSource = context.dataSource.getDataSourceForEntity('user');
             const message = await messageDataSource.findById(parent.id);
-            if (message) {
+            if (message && message.senderId) {
                 const sender = await userDataSource.findById(String(message.senderId));
                 if (sender) {
                     return sender;
@@ -39,7 +39,7 @@ const FieldResolver: MessageResolvers<AppContext> = {
             const messageDataSource = context.dataSource.getDataSourceForEntity('message');
             const userDataSource = context.dataSource.getDataSourceForEntity('user');
             const message = await messageDataSource.findById(parent.id);
-            if (message) {
+            if (message && message.recipientId) {
                 const recipient = await userDataSource.findById(String(message.recipientId));
                 if (recipient) {
                     return recipient;
@@ -50,5 +50,3 @@ const FieldResolver: MessageResolvers<AppContext> = {
         return {} as User;
     },
 };
-
-export default FieldResolver;

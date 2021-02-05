@@ -1,11 +1,12 @@
 import { Connection, Repository } from 'typeorm';
 import { User } from '../database/entities';
 import { DataStore } from './dataStore';
+import { MutationCreateUserArgs } from '../types';
 
 export class UserDataSource {
     private dataStore: DataStore<User>;
     private userRepository: Repository<User>;
-    private requests: Record<string, Promise<User | undefined> | undefined> = {};
+    private requests: Record<string, Promise<User | User[] | undefined> | undefined> = {};
     constructor(dbConnection: Connection) {
         this.userRepository = dbConnection.getRepository(User);
         this.dataStore = new DataStore<User>();
@@ -17,7 +18,7 @@ export class UserDataSource {
         if (entityFromStore) {
             return Promise.resolve(entityFromStore);
         } else if (pendingResponse) {
-            return pendingResponse;
+            return pendingResponse as Promise<User | undefined>;
         } else {
             const promise = this.userRepository.findOne({ id });
             this.requests[id] = promise;
@@ -27,7 +28,33 @@ export class UserDataSource {
                 }
                 this.requests[id] = undefined;
             });
+            return promise;
         }
-        return this.userRepository.findOne({ id });
+    }
+    public findByParams(params: Partial<User>): Promise<User[] | undefined> {
+        const entitiesFromStore = this.dataStore.retrieveMatchingRecords(params);
+        const requestId = JSON.stringify(params);
+        const pendingResponse = this.requests[requestId];
+        if (entitiesFromStore.length) {
+            return Promise.resolve(entitiesFromStore);
+        } else if (pendingResponse) {
+            return pendingResponse as Promise<User[]>;
+        } else {
+            const promise = this.userRepository.find(params);
+            this.requests[requestId] = promise;
+            promise.then((users) => {
+                if (users && users.length) {
+                    this.dataStore.insertRecords(users);
+                }
+                this.requests[requestId] = undefined;
+            });
+            return promise;
+        }
+    }
+    public create(params: MutationCreateUserArgs): Promise<User> {
+        const user = this.userRepository.create(params);
+        return this.userRepository.save(user).then((savedUser) => {
+            return this.dataStore.insertRecord(savedUser);
+        });
     }
 }
