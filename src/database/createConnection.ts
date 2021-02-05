@@ -3,7 +3,11 @@ import { Logger } from 'pino';
 
 import baseDbConfig from './connectionOptions.base';
 
-export const initDb = async (logger: Logger): Promise<Connection> => {
+export interface ConnectionMap {
+    gqlSql: Connection;
+}
+
+export const initDbConnections = async (logger: Logger): Promise<ConnectionMap> => {
     const env = process.env.ENV || 'dev';
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const envDbConfig = require(`./connectionOptions.${env}`).default;
@@ -12,7 +16,7 @@ export const initDb = async (logger: Logger): Promise<Connection> => {
         ...envDbConfig,
     };
     logger.info('Connecting to db');
-    const connection = await createConnection(dbConfig);
+    const gqlSql = await createConnection(dbConfig);
     logger.info('Connected to db');
-    return connection;
+    return { gqlSql };
 };

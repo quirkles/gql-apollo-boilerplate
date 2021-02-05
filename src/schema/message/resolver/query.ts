@@ -1,11 +1,12 @@
 import { GenericErrorResponse } from '../../shared/responses';
-import { Message } from '../../../database/entities';
 import { MessageQueryResponse } from '../../../types';
+import { AppContext } from '../../../appContext';
 
 const messageQueryResolver = {
-    async message(_: undefined, args: { messageId: string }): Promise<MessageQueryResponse> {
+    async message(_: undefined, args: { messageId: string }, context: AppContext): Promise<MessageQueryResponse> {
         try {
-            const message = await Message.findOne(args.messageId);
+            const messageDataSource = context.dataSource.getDataSourceForEntity('message');
+            const message = await messageDataSource.findById(args.messageId);
             return message || new GenericErrorResponse('Could not find message');
         } catch (e) {
             return new GenericErrorResponse('Could not find message');

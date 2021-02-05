@@ -1,6 +1,6 @@
 import { User, Message } from './entities';
 
 export default {
-    name: 'default',
+    name: 'gqlSql',
     entities: [User, Message],
 };
