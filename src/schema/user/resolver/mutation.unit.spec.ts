@@ -5,6 +5,14 @@ jest.mock('jsonwebtoken', () => ({
     sign: jest.fn((payload) => `token: ${JSON.stringify(payload)}`),
 }));
 
+jest.mock('../../shared/responses', () => ({
+    GenericErrorResponse: jest.fn().mockImplementation((message, reason) => ({ message, reason })),
+}));
+
+jest.mock('../../../encrypt', () => ({
+    encrypt: jest.fn((string) => string),
+}));
+
 const getTestContext = () => ({
     logger: {
         error: jest.fn(),
@@ -100,6 +108,61 @@ describe('user mutations', () => {
                 token: 'token: {"username":"free","sub":"1234"}',
                 user: {
                     id: '1234',
+                },
+            });
+        });
+    });
+    describe('loginUser', () => {
+        it('returns an error response if no user is found', async () => {
+            const mockUserDataSource = {
+                findByParams: jest.fn().mockReturnValue([]),
+            };
+            const testContext = {
+                dataSource: {
+                    getDataSourceForEntity: jest.fn().mockReturnValue(mockUserDataSource),
+                },
+            };
+            const response = await Mutation.loginUser(
+                undefined,
+                { username: 'quirkles', password: 'abcd' },
+                testContext as never,
+            );
+            expect(response).toEqual(new GenericErrorResponse('Could not log you in', 'No matching user found'));
+        });
+        it('returns an error response if user find throws error', async () => {
+            const mockUserDataSource = {
+                findByParams: jest.fn().mockRejectedValue(new Error('dangit')),
+            };
+            const testContext = {
+                dataSource: {
+                    getDataSourceForEntity: jest.fn().mockReturnValue(mockUserDataSource),
+                },
+            };
+            const response = await Mutation.loginUser(
+                undefined,
+                { username: 'quirkles', password: 'abcd' },
+                testContext as never,
+            );
+            expect(response).toEqual(new GenericErrorResponse('Could not log you in', 'dangit'));
+        });
+        it('returns user and token if all goes well', async () => {
+            const mockUserDataSource = {
+                findByParams: jest.fn().mockReturnValue([{ username: 'quirkles' }]),
+            };
+            const testContext = {
+                dataSource: {
+                    getDataSourceForEntity: jest.fn().mockReturnValue(mockUserDataSource),
+                },
+            };
+            const response = await Mutation.loginUser(
+                undefined,
+                { username: 'quirkles', password: 'abcd' },
+                testContext as never,
+            );
+            expect(response).toEqual({
+                token: 'token: {"username":"quirkles"}',
+                user: {
+                    username: 'quirkles',
                 },
             });
         });
