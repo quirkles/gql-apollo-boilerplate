@@ -35,7 +35,7 @@ export class UserDataSource {
         const entitiesFromStore = this.dataStore.retrieveMatchingRecords(params);
         const requestId = JSON.stringify(params);
         const pendingResponse = this.requests[requestId];
-        if (entitiesFromStore.length) {
+        if (entitiesFromStore && entitiesFromStore.length) {
             return Promise.resolve(entitiesFromStore);
         } else if (pendingResponse) {
             return pendingResponse as Promise<User[]>;
@@ -53,8 +53,6 @@ export class UserDataSource {
     }
     public create(params: MutationCreateUserArgs): Promise<User> {
         const user = this.userRepository.create(params);
-        return this.userRepository.save(user).then((savedUser) => {
-            return this.dataStore.insertRecord(savedUser);
-        });
+        return this.userRepository.save(user).then((savedUser) => this.dataStore.insertRecord(savedUser));
     }
 }
