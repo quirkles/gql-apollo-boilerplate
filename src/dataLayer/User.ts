@@ -22,13 +22,13 @@ export class UserDataSource {
         } else {
             const promise = this.userRepository.findOne({ id });
             this.requests[id] = promise;
-            promise.then((user) => {
+            return promise.then((user) => {
                 if (user) {
                     this.dataStore.insertRecord(user);
                 }
                 this.requests[id] = undefined;
+                return user;
             });
-            return promise;
         }
     }
     public findByParams(params: Partial<User>): Promise<User[] | undefined> {
