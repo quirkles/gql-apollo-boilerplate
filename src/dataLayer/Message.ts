@@ -21,13 +21,13 @@ export class MessageDataSource {
         } else {
             const promise = this.messageRepository.findOne({ id });
             this.requests[id] = promise;
-            promise.then((message) => {
+            return promise.then((message) => {
                 if (message) {
                     this.dataStore.insertRecord(message);
                 }
                 this.requests[id] = undefined;
+                return message;
             });
         }
-        return this.messageRepository.findOne({ id });
     }
 }
