@@ -1,5 +1,3 @@
-import messageMutationResolver from './mutation';
-import { UserDataSource } from '../../../dataLayer/User';
 import { MessageDataSource } from '../../../dataLayer/Message';
 import { GenericErrorResponse } from '../../shared/responses';
 import messageQueryResolver from './query';
