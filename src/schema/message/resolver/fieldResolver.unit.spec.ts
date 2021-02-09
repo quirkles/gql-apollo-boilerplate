@@ -1,4 +1,5 @@
 import { FieldResolver } from './fieldResolver';
+import { GenericErrorResponse } from '../../shared/responses';
 
 const getTestContext = () => ({
     logger: {
@@ -146,9 +147,9 @@ describe('MessageFieldResolver', () => {
             expect(messageFindByIdMock).toHaveBeenCalledTimes(1);
             expect(userFindByIdMock).not.toHaveBeenCalled();
             expect(context.logger.error).toHaveBeenCalledWith('Failed to find the message sender');
-            expect(result).toEqual({});
+            expect(result).toEqual(new GenericErrorResponse('Could not find user'));
         });
-        it('falls back to empty object if found message has no sender id', async () => {
+        it('falls back to generic error if found message has no sender id', async () => {
             const parentEntity = { id: '1234' };
             const args = {};
             const context = getTestContext();
@@ -179,7 +180,7 @@ describe('MessageFieldResolver', () => {
             expect(messageFindByIdMock).toHaveBeenCalledTimes(1);
             expect(userFindByIdMock).not.toHaveBeenCalled();
             expect(context.logger.error).toHaveBeenCalledWith('Failed to find the message sender');
-            expect(result).toEqual({});
+            expect(result).toEqual(new GenericErrorResponse('Could not find user'));
         });
         it('does not call the datasource if id and sender are present', async () => {
             const sender = { username: 'the_sender' };
@@ -280,7 +281,7 @@ describe('MessageFieldResolver', () => {
             expect(messageFindByIdMock).toHaveBeenCalledTimes(1);
             expect(userFindByIdMock).not.toHaveBeenCalled();
             expect(context.logger.error).toHaveBeenCalledWith('Failed to find the message recipient');
-            expect(result).toEqual({});
+            expect(result).toEqual(new GenericErrorResponse('Could not find user'));
         });
         it('falls back to empty object if found message has no recipient id', async () => {
             const parentEntity = { id: '1234' };
@@ -313,7 +314,7 @@ describe('MessageFieldResolver', () => {
             expect(messageFindByIdMock).toHaveBeenCalledTimes(1);
             expect(userFindByIdMock).not.toHaveBeenCalled();
             expect(context.logger.error).toHaveBeenCalledWith('Failed to find the message recipient');
-            expect(result).toEqual({});
+            expect(result).toEqual(new GenericErrorResponse('Could not find user'));
         });
         it('does not call the datasource if id and recipient are present', async () => {
             const recipient = { username: 'the_recipient' };
