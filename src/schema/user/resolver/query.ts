@@ -2,7 +2,7 @@ import { GenericErrorResponse } from '../../shared/responses';
 import { UserQueryResponse } from '../../../types';
 import { AppContext } from '../../../appContext';
 
-const messageQueryResolver = {
+const user = {
     async user(_: undefined, args: { userId: string }, context: AppContext): Promise<UserQueryResponse> {
         try {
             const userDataSource = context.dataSource.getDataSourceForEntity('user');
@@ -14,4 +14,4 @@ const messageQueryResolver = {
     },
 };
 
-export default messageQueryResolver;
+export default user;

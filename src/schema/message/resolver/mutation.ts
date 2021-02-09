@@ -1,6 +1,5 @@
 import { AppContext } from '../../../appContext';
 import { GenericErrorResponse, UnauthorizedRequestResponse } from '../../shared/responses';
-import { Message, User } from '../../../database/entities';
 import { CreateMessageInput, CreateMessageResponse } from '../../../types';
 
 const messageMutationResolver = {
@@ -13,16 +12,19 @@ const messageMutationResolver = {
             return new UnauthorizedRequestResponse();
         }
         try {
+            const userDataSource = context.dataSource.getDataSourceForEntity('user');
+            const messageDataSource = context.dataSource.getDataSourceForEntity('message');
             const [recipient, sender] = await Promise.all([
-                User.findOneOrFail(args.input.recipientId),
-                User.findOneOrFail(context.user.id),
+                userDataSource.findById(args.input.recipientId),
+                userDataSource.findById(context.user.id),
             ]);
             if (recipient && sender) {
-                const message = new Message();
-                message.recipient = recipient;
-                message.sender = sender;
-                message.text = args.input.messageText;
-                return message.save();
+                const message = {
+                    text: args.input.messageText,
+                    recipient,
+                    sender,
+                };
+                return messageDataSource.create(message);
             }
             return new GenericErrorResponse('Could not create message', 'Could not locate the specified recipient');
         } catch (e) {

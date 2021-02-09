@@ -1,4 +1,4 @@
-import { Connection, Repository } from 'typeorm';
+import { Connection, DeepPartial, Repository } from 'typeorm';
 import { Message } from '../database/entities';
 import { DataStore } from './dataStore';
 
@@ -29,5 +29,10 @@ export class MessageDataSource {
                 return message;
             });
         }
+    }
+
+    public create(message: DeepPartial<Message>): Promise<Message> {
+        const user = this.messageRepository.create(message);
+        return this.messageRepository.save(user).then((savedMessage) => this.dataStore.insertRecord(savedMessage));
     }
 }

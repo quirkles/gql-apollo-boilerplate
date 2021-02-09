@@ -1,6 +1,5 @@
 import { MessageDataSource } from './Message';
 import { DataStore } from './dataStore';
-import { UserDataSource } from './User';
 
 interface TestDataStore {
     retrieveRecordById: jest.Mock;
@@ -52,6 +51,8 @@ const getMockDbConnection = () => {
         },
         Message: {
             findOne: jest.fn(),
+            create: jest.fn(),
+            save: jest.fn(),
         },
     };
     return {
@@ -110,6 +111,24 @@ describe('MessageDataSource', () => {
             expect(dataStoreMockInstance.insertRecord).toHaveBeenCalledTimes(1);
             expect(messageRepository.findOne).toHaveBeenCalledWith({ id: '1234' });
             expect(messageRepository.findOne).toHaveBeenCalledTimes(1);
+        });
+    });
+    describe('create', () => {
+        it('it calls create on the messageRepository, attempts to save that entity, returns the saved entity if successful', async () => {
+            const mockDbConnection = getMockDbConnection();
+            const messageRepository = mockDbConnection.getRepository('Message');
+            messageRepository.create.mockReturnValue({ text: 'message text' });
+            messageRepository.save.mockResolvedValue({ id: '123', text: 'message text' });
+            const messageDataSource = new MessageDataSource(mockDbConnection as never);
+            dataStoreMockInstance.insertRecord.mockImplementation((thing) => thing);
+            const result = await messageDataSource.create({ text: 'message text' });
+            expect(result).toEqual({ id: '123', text: 'message text' });
+            expect(dataStoreMockInstance.insertRecord).toHaveBeenCalledWith({ id: '123', text: 'message text' });
+            expect(dataStoreMockInstance.insertRecord).toHaveBeenCalledTimes(1);
+            expect(messageRepository.create).toHaveBeenCalledWith({ text: 'message text' });
+            expect(messageRepository.create).toHaveBeenCalledTimes(1);
+            expect(messageRepository.save).toHaveBeenCalledWith({ text: 'message text' });
+            expect(messageRepository.create).toHaveBeenCalledTimes(1);
         });
     });
 });

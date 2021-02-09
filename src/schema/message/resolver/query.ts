@@ -9,7 +9,7 @@ const messageQueryResolver = {
             const message = await messageDataSource.findById(args.messageId);
             return message || new GenericErrorResponse('Could not find message');
         } catch (e) {
-            return new GenericErrorResponse('Could not find message');
+            return new GenericErrorResponse('Could not find message', e.message);
         }
     },
 };
