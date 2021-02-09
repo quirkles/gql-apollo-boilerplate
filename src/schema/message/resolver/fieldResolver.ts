@@ -1,5 +1,6 @@
-import { Message, MessageResolvers, User } from '../../../types';
+import { Message, MessageResolvers, UserQueryResponse } from '../../../types';
 import { AppContext } from '../../../appContext';
+import { GenericErrorResponse } from '../../shared/responses';
 
 export const FieldResolver: MessageResolvers<AppContext> = {
     async text(parent: Message, args: unknown, context: AppContext) {
@@ -15,7 +16,7 @@ export const FieldResolver: MessageResolvers<AppContext> = {
         context.logger?.error('Failed to find the message text');
         return '';
     },
-    async sender(parent: Message, args: unknown, context: AppContext): Promise<User> {
+    async sender(parent: Message, args: unknown, context: AppContext): Promise<UserQueryResponse> {
         if (parent.sender) {
             return parent.sender;
         } else if (parent.id) {
@@ -30,9 +31,9 @@ export const FieldResolver: MessageResolvers<AppContext> = {
             }
         }
         context.logger?.error('Failed to find the message sender');
-        return {} as User;
+        return new GenericErrorResponse('Could not find user');
     },
-    async recipient(parent: Message, args: unknown, context: AppContext): Promise<User> {
+    async recipient(parent: Message, args: unknown, context: AppContext): Promise<UserQueryResponse> {
         if (parent.recipient) {
             return parent.recipient;
         } else if (parent.id) {
@@ -47,6 +48,6 @@ export const FieldResolver: MessageResolvers<AppContext> = {
             }
         }
         context.logger?.error('Failed to find the message recipient');
-        return {} as User;
+        return new GenericErrorResponse('Could not find user');
     },
 };
