@@ -1,6 +1,10 @@
 import { FieldResolver } from './fieldResolver';
 import { GenericErrorResponse } from '../../shared/responses';
 
+jest.mock('../../shared/responses', () => ({
+    GenericErrorResponse: jest.fn().mockImplementation((message, reason) => ({ message, reason })),
+}));
+
 const getTestContext = () => ({
     logger: {
         error: jest.fn(),
