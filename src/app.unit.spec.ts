@@ -52,10 +52,18 @@ describe('startApp', () => {
     beforeEach(() => {
         (app as MockExpress).clearMocks();
     });
-    it('returns the server instance and the connections used by the app, default port is 4000', async () => {
+    it('returns the server instance and the connections used by the app, default port is 4000', async (done) => {
         const { server, connectionMap } = await startApp();
         expect(app.listen).toHaveBeenCalledWith({ port: '4000' }, expect.any(Function));
         expect(server).toEqual({ isServer: true });
         expect(connectionMap).toEqual({ isConnectionMap: true });
+        done();
+    });
+    it('returns the server instance and the connections used by the app, can override config variables', async (done) => {
+        const { server, connectionMap } = await startApp({ PORT: '909090' });
+        expect(app.listen).toHaveBeenCalledWith({ port: '909090' }, expect.any(Function));
+        expect(server).toEqual({ isServer: true });
+        expect(connectionMap).toEqual({ isConnectionMap: true });
+        done();
     });
 });

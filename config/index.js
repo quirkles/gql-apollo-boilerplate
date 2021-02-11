@@ -6,35 +6,44 @@ const dotenv = require('dotenv');
 // Set the env from APP_ENV and fall back to dev
 const env = process.env.ENV || 'dev';
 
-function getDotenvConfig() {
-    const envPath = path.join(__dirname, '..', `.${env}.env`);
-    let dotEnvBuffer = null;
-    try {
-        dotEnvBuffer = fs.readFileSync(envPath);
-    } catch (err) {
-        if (err.code === 'ENOENT') return {};
-        throw err;
-    }
-    return dotenv.parse(dotEnvBuffer);
-}
+let config;
 
-function getEnvVarConfig() {
-    const envVars = ['JWT_SECRET', 'ENCRYPTION_KEY', 'ENCRYPTION_IV', 'LOG_TO_FILE', 'PORT'];
-    return envVars.reduce((envVarConfig, varName) => {
-        const value = process.env[varName];
-        if (value) {
-            envVarConfig[varName] = value;
+const getConfig = (overrides) => {
+    function getDotenvConfig() {
+        const envPath = path.join(__dirname, '..', `.${env}.env`);
+        let dotEnvBuffer = null;
+        try {
+            dotEnvBuffer = fs.readFileSync(envPath);
+        } catch (err) {
+            if (err.code === 'ENOENT') return {};
+            throw err;
         }
-        return envVarConfig;
-    }, {});
-}
+        return dotenv.parse(dotEnvBuffer);
+    }
 
-const baseConfig = require('./base') || {};
+    function getEnvVarConfig() {
+        const envVars = ['JWT_SECRET', 'ENCRYPTION_KEY', 'ENCRYPTION_IV', 'LOG_TO_FILE', 'PORT'];
+        return envVars.reduce((envVarConfig, varName) => {
+            const value = process.env[varName];
+            if (value) {
+                envVarConfig[varName] = value;
+            }
+            return envVarConfig;
+        }, {});
+    }
 
-const envConfig = require(`./${env.toLowerCase()}`) || {};
+    const baseConfig = require('./base') || {};
 
-const fromEnvFile = getDotenvConfig();
-const fromProcessEnv = getEnvVarConfig();
-const config = Object.assign(baseConfig, envConfig, fromEnvFile, fromProcessEnv);
+    const envConfig = require(`./${env.toLowerCase()}`) || {};
 
-module.exports = config;
+    const fromEnvFile = getDotenvConfig();
+    const fromProcessEnv = getEnvVarConfig();
+    return Object.assign(baseConfig, envConfig, fromEnvFile, fromProcessEnv, overrides);
+};
+
+config = getConfig();
+
+module.exports = {
+    default: config,
+    getConfig,
+};

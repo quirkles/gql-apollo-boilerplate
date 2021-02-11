@@ -9,22 +9,19 @@ import { getLogger, getLoggerMiddleware } from './middleware/logger';
 import { createAppContext } from './appContext';
 import { getUserMiddleware } from './middleware/user';
 import { ConnectionMap, initDbConnections } from './database/createConnection';
+import { AppConfig, getConfig } from '../config';
 
 const app: Express = express();
 const appLogger = getLogger();
 
 export const startApp = (
-    envOverrides: Record<string, string | undefined> = {},
+    envOverrides: Partial<AppConfig> = {},
 ): Promise<{
     server: Server;
     connectionMap: ConnectionMap;
 }> => {
-    process.env = {
-        ...process.env,
-        ...envOverrides,
-    };
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config = require('../config');
+    const config = getConfig(envOverrides);
     return initDbConnections(appLogger)
         .then(async (connectionMap: ConnectionMap) => {
             const port = config.PORT || '4000';
