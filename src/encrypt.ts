@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 
-import config from '../config';
+import { default as config } from '../config';
 
 const { ENCRYPTION_IV, ENCRYPTION_KEY } = config;
 
