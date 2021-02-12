@@ -2,10 +2,12 @@ import axios from 'axios';
 import { Connection, Repository } from 'typeorm';
 import { User } from '../../../database/entities';
 
+import { config } from '../../../../config';
+
 describe('user mutations integration', () => {
     const connection: Connection = global.dbConnection as Connection;
     beforeAll(() => {
-        axios.defaults.baseURL = `http://localhost:4000`;
+        axios.defaults.baseURL = `http://localhost:${config.PORT}`;
     });
     describe('createUser', () => {
         it('creates a user and returns the user and token', async () => {

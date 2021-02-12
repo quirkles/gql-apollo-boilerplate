@@ -14,12 +14,17 @@ class CustomEnvironment extends NodeEnvironment {
         const testRunId = uuid();
         this.testRunId = testRunId;
         this.dbName = `database.test.${testRunId}.sqlite`;
+        process.env = {
+            ...process.env,
+            ENV: 'test',
+            DB_NAME_OVERRIDE: this.dbName,
+        };
     }
 
     async setup() {
         await super.setup();
         try {
-            const { server, connectionMap } = await startApp({ ENV: 'test', DB_NAME_OVERRIDE: this.dbName });
+            const { server, connectionMap } = await startApp();
             this.testServer = server;
             this.global.dbConnection = connectionMap.gqlSql;
             console.log('Integration test setup complete') //eslint-disable-line

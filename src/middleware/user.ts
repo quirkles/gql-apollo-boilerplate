@@ -1,7 +1,7 @@
 import { AppRequest, AppUser } from '../appContext';
 import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import config from '../../config';
+import { config } from '../../config';
 
 interface JwtBody {
     email: string;

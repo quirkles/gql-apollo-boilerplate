@@ -44,6 +44,6 @@ const getConfig = (overrides) => {
 config = getConfig();
 
 module.exports = {
-    default: config,
+    config,
     getConfig,
 };

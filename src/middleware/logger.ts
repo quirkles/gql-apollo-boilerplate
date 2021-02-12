@@ -2,7 +2,7 @@ import pino, { Logger } from 'pino';
 import * as os from 'os';
 import { join } from 'path';
 
-import config from '../../config';
+import { config } from '../../config';
 import { NextFunction, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { AppRequest } from '../appContext';

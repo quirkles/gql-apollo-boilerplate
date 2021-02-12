@@ -15,13 +15,13 @@ const app: Express = express();
 const appLogger = getLogger();
 
 export const startApp = (
-    envOverrides: Partial<AppConfig> = {},
+    appConfigOverrides: Partial<AppConfig> = {},
 ): Promise<{
     server: Server;
     connectionMap: ConnectionMap;
 }> => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config = getConfig(envOverrides);
+    const config = getConfig(appConfigOverrides);
     return initDbConnections(appLogger)
         .then(async (connectionMap: ConnectionMap) => {
             const port = config.PORT || '4000';

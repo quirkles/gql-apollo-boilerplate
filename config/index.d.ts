@@ -7,6 +7,5 @@ export interface AppConfig {
 
     PORT: string;
 }
-declare const config: AppConfig;
+export const config: AppConfig;
 export const getConfig: (overrides: Partial<AppConfig>) => AppConfig;
-export default config;

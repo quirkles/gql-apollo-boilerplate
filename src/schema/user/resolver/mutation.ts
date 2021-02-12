@@ -2,7 +2,7 @@ import { AppContext } from '../../../appContext';
 import { CreateUserResponse, LoginUserResponse, MutationCreateUserArgs, MutationLoginUserArgs } from '../../../types';
 import { GenericErrorResponse } from '../../shared/responses';
 import { sign } from 'jsonwebtoken';
-import config from '../../../../config';
+import { config } from '../../../../config';
 import { encrypt } from '../../../encrypt';
 
 const userMutationResolver = {

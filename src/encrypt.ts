@@ -1,10 +1,6 @@
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 
-import { default as config } from '../config';
-
-console.log('#######') //eslint-disable-line
-console.log('config', config) //eslint-disable-line
-console.log('#######') //eslint-disable-line
+import { config } from '../config';
 
 const { ENCRYPTION_IV, ENCRYPTION_KEY } = config;
 
